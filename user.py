@@ -19,9 +19,23 @@ class User:
             users.append( cls(user) )
         return users
     
+    @classmethod
+    def get_byid(cls, data:dict):
+        query = "SELECT * FROM users WHERE id = %(id)s;"
+        results = connectToMySQL('users').query_db(query, data)
+        return cls (results[0])
+
+    @classmethod
+    def delete_byid(cls, data):
+        query = "DELETE FROM users WHERE id = %(id)s;"
+        return connectToMySQL('users').query_db(query, data)
 
     @classmethod
     def save(cls, data ):
         query = "INSERT INTO users ( first_name , last_name , email , created_at, updated_at ) VALUES ( %(fname)s , %(lname)s , %(email)s , NOW() , NOW() );"
-
         return connectToMySQL('users').query_db( query, data )
+
+    @classmethod
+    def update(cls, data ):
+        query = "UPDATE users SET( first_name , last_name , email , created_at, updated_at ) VALUES ( %(fname)s , %(lname)s , %(email)s , NOW() , NOW() ) WHERE id = %(id)s;"
+        return connectToMySQL('users').query_db( query, data )        
